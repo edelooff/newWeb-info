@@ -16,4 +16,4 @@ It doesn't demonstrate any of the following:
 
 # How to run
 
-This is currently still messed up and broken, requiring the containing directory to be executed as a module. Cloning this project into a repo called `newweb_info` would allow you to run it as `python -m newweb_info`. 
+Simply running the `serve.py` script included at the repository root should suffice, assuming newWeb itself has been installed. Additionally, an Apache configuration and WSGI script are included, allowing for migration from `mod_python` (µWeb) to `mod_wsgi` (newWeb).
