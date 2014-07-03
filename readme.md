@@ -1,6 +1,6 @@
 # newWeb example
 
-This is an example web application that demonstrates some of the core functionality of [newWeb](/edelooff/newWeb). The main page shows a listing of query paramters, POST data and provided cookies and allows the user to set their own POST data and/or cookies. Additionally, a full listing of environment variables is included.
+This is an example web application that demonstrates some of the core functionality of [newWeb](https://github.com/edelooff/newWeb). The main page shows a listing of query paramters, POST data and provided cookies and allows the user to set their own POST data and/or cookies. Additionally, a full listing of environment variables is included.
 
 Code-wise, it showcases the following:
 
