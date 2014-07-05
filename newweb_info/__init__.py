@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""An uweb info page and testcase."""
+"""A newWeb example project to provide information about newWeb itself."""
 
 # Standard modules
 import os
