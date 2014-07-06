@@ -44,14 +44,11 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
 
   def Index(self, _path):
     """Returns the index.html template"""
-    self.persistent.Set('conn_id', self.persistent.Get('conn_id', 0) + 1)
-
     if 'nw_cookie_name' in self.post:
       self.CustomCookie()
     return self.parser.Parse(
         'index.html',
         method=self.req.env['REQUEST_METHOD'],
-        conn_id=self.persistent.Get('conn_id'),
         query=self.get,
         postvars=self.post,
         cookies=self.cookies,

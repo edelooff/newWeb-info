@@ -1,12 +1,8 @@
 [header]
     <div id="content">
       <div>
-        <h2>Request info</h2>
-        <ul>
-          <li><em>Method: <strong>[method]</strong></em></li>
-          <li><em>ConnectionID: <strong>[conn_id]</strong></em></li>
-        </ul>
-        <br>
+        <h2>Request method</h2>
+        <p>[method]</p>
         <h2>Query arguments (GET):</h2>
         <ul class="query">
           {{ for name, value in [query|items|sorted] }} {{ inline varlisting.html }} {{ endfor }}
