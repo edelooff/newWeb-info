@@ -118,37 +118,13 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
 
   @staticmethod
   def Redirect(location):
-    """Generated a temporary redirect to the given URL.
+    """Generates a temporary redirect to the given location.
 
-    Returns a Page object with a custom HTTP Code (307 in our case), which
-    trigger uWeb to send a HTTP_TEMPORARY_REDIRECT. The custom Location: header
-    then directs the client to the given URL.
-
-    From the specification:
-      [http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html]
-
-      The requested resource resides temporarily under a different URI. Since
-      the redirection MAY be altered on occasion, the client SHOULD continue to
-      use the Request-URI for future requests. This response is only cacheable
-      if indicated by a Cache-Control or Expires header field.
-
-      The temporary URI SHOULD be given by the Location field in the response.
-      Unless the request method was HEAD, the entity of the response SHOULD
-      contain a short hypertext note with a hyperlink to the new URI(s) , since
-      many pre-HTTP/1.1 user agents do not understand the 307 status. Therefore,
-      the note SHOULD contain the information necessary for a user to repeat the
-      original request on the new URI.
-
-      If the 307 status code is received in response to a request other than GET
-      or HEAD, the user agent MUST NOT automatically redirect the request unless
-      it can be confirmed by the user, since this might change the conditions
-      under which the request was issued.
-
-    Arguments:
-      @ location: str
-        The full URL the client should be redirected to, including schema.
+    Returns a HTTP 303 (See Other) redirect which tells the browser that the
+    requested document is at the given location and that any POST performed
+    should not be performed again. The request method must be HEAD or GET.
     """
-    return newweb.Redirect(location)
+    return newweb.Redirect(location, httpcode=303)
 
   def FourOhFour(self, path):
     """The request could not be fulfilled, this returns a 404."""
