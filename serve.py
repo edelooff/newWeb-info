@@ -1,8 +1,5 @@
 """Starts a local development server for newWeb info."""
 
-# Third-party modules
-import uweb
-
 # Application
 import newweb_info
 
