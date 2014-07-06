@@ -9,11 +9,11 @@ import os
 import time
 
 # uWeb modules
-import uweb
-from uweb.pagemaker import login
+import newweb
+from newweb.pagemaker import login
 
 
-class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
+class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
   """Holds all the html generators for the webapp
 
   Each page as a separate method.
@@ -24,7 +24,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
             'footer': self.parser.Parse(
                 'footer.html',
                 year=time.strftime('%Y'),
-                version=uweb.__version__)}
+                version=newweb.__version__)}
 
   def CustomCookie(self):
     """Sets a cookie, and redirects the user to the index page.
@@ -117,7 +117,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
         Linebreaks and leading whitespace are honored.
         <strong>HTML tags do nothing, as demonstrated above<strong>.
         """
-    return uweb.Response(text, content_type='text/plain')
+    return newweb.Response(text, content_type='text/plain')
 
   @staticmethod
   def Redirect(location):
@@ -151,7 +151,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
       @ location: str
         The full URL the client should be redirected to, including schema.
     """
-    return uweb.Redirect(location)
+    return newweb.Redirect(location)
 
   def FourOhFour(self, path):
     """The request could not be fulfilled, this returns a 404."""
@@ -174,7 +174,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
           'Execution of %r triggered an exception', path, exc_info=exc_info)
       content = self.parser.Parse(
           '500.html', path=path, **self.CommonBlocks('http500'))
-      return uweb.Response(content, httpcode=500)
+      return newweb.Response(content, httpcode=500)
 
   # ############################################################################
   # OpenID result handlers.
