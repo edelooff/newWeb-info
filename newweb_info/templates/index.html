@@ -3,20 +3,26 @@
       <div>
         <h2>Request method</h2>
         <p>[method]</p>
+        {{ if [query] }}
         <h2>Query arguments (GET):</h2>
-        <ul class="query">
+        <ul class="varlist">
           {{ for name, value in [query|items|sorted] }} {{ inline varlisting.html }} {{ endfor }}
         </ul>
         <br>
+        {{ endif }}
+        {{ if [postvars] }}
         <h2>POST data:</h2>
         <ul class="varlist">
           {{ for name, value in [postvars|items|sorted] }} {{ inline varlisting.html }} {{ endfor }}
         </ul>
         <br>
+        {{ endif }}
         <h2>Cookies:</h2>
+        {{ if [cookies] }}
         <ul class="varlist">
           {{ for name, value in [cookies|items|sorted] }} {{ inline varlisting.html }} {{ endfor }}
         </ul>
+        {{ endif }}
       </div>
       <div>
         <h2>Test POST data</h2>
