@@ -105,20 +105,19 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
         message=text,
         **self.CommonBlocks('uweb'))
 
-  @staticmethod
-  def Text():
+  def Text(self):
     """Returns a page with data in text/plain.
 
     To return a different content type, the returned object must be a Page,
     where the `content_type` argument can be set to any desired mimetype.
     """
-    text = """
+    self.req.response.content_type = 'text/plain'
+    return """
         <h1>This is a text-only page.</h1>
 
         Linebreaks and leading whitespace are honored.
         <strong>HTML tags do nothing, as demonstrated above<strong>.
         """
-    return newweb.Response(text, content_type='text/plain')
 
   @staticmethod
   def Redirect(location):
@@ -156,9 +155,9 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
 
   def FourOhFour(self, path):
     """The request could not be fulfilled, this returns a 404."""
-    content = self.parser.Parse(
+    self.req.response.httpcode = 404
+    return self.parser.Parse(
         '404.html', path=path, **self.CommonBlocks('http404'))
-    return uweb.Response(content, httpcode=404)
 
   def InternalServerError(self, *exc_info):
     """Returns a HTTP 500 page, since the request failed elsewhere."""
@@ -173,9 +172,9 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
       path = self.req.path
       logging.warning(
           'Execution of %r triggered an exception', path, exc_info=exc_info)
-      content = self.parser.Parse(
+      self.req.response.httpcode = 500
+      return self.parser.Parse(
           '500.html', path=path, **self.CommonBlocks('http500'))
-      return newweb.Response(content, httpcode=500)
 
   # ############################################################################
   # OpenID result handlers.
