@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Html generators for the minimal uweb server"""
+"""Request handlers for the newWeb example info application."""
 
 # Standard modules
 import base64
@@ -31,10 +31,10 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
 
     This way, the cookie will be visible when the user posts the form.
     """
-    self.req.AddCookie(self.post.getfirst('uweb_cookie_name'),
-                       self.post.getfirst('uweb_cookie_value', 'default'),
-                       path=self.post.getfirst('uweb_cookie_path'),
-                       max_age=self.post.getfirst('uweb_cookie_max_age', 60))
+    self.req.AddCookie(self.post.getfirst('nw_cookie_name'),
+                       self.post.getfirst('nw_cookie_value', 'default'),
+                       path=self.post.getfirst('nw_cookie_path'),
+                       max_age=self.post.getfirst('nw_cookie_max_age', 60))
     # We send a 303 instead of a 307 because the latter would repeat the POST.
     # This would trigger a redirect loop, which is a bad bad thing :-)
 
@@ -46,7 +46,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
     """Returns the index.html template"""
     self.persistent.Set('conn_id', self.persistent.Get('conn_id', 0) + 1)
 
-    if 'uweb_cookie_name' in self.post:
+    if 'nw_cookie_name' in self.post:
       self.CustomCookie()
     return self.parser.Parse(
         'index.html',
@@ -64,7 +64,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
     if self.post:
       data = dict((key, self.post.getfirst(key)) for key in self.post)
     else:
-      data = {'name': u'\N{micro sign}Web'}
+      data = {'name': u'newWeb', 'version': newweb.__version__}
     self.req.response.headers.update({
         'Access-Control-Allow-Origin': '*',
         'Cache-Control': 'no-cache, must-revalidate'})
