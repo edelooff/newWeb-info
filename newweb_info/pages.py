@@ -62,13 +62,14 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
   def Json(self):
     """Returns a JSON response with the form data, or just the project name."""
     if self.post:
-      form = dict((key, self.post.getfirst(key)) for key in self.post)
-      return uweb.Response(json.dumps(form, sort_keys=True, indent=4),
-                           content_type='application/json')
-    return uweb.Response(json.dumps({'name': u'\N{micro sign}Web'}),
-                         content_type='application/json',
-                         headers={'Access-Control-Allow-Origin': '*',
-                                  'Cache-Control': 'no-cache, must-revalidate'})
+      data = dict((key, self.post.getfirst(key)) for key in self.post)
+    else:
+      data = {'name': u'\N{micro sign}Web'}
+    self.req.response.headers.update({
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache, must-revalidate'})
+    self.req.response.content_type = 'application/json'
+    return json.dumps(data, sort_keys=True, indent=4)
 
   @staticmethod
   def MakeFail():
