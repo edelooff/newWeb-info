@@ -5,7 +5,7 @@
 import os
 
 # Third-party modules
-import uweb
+import newweb
 
 # Application components
 from . import pages
@@ -21,7 +21,8 @@ def main():
     name of a presenter method which should handle it.
   - The configuration file (ini format) from which settings should be read.
   """
-  config = os.path.join(os.path.dirname(__file__), 'config.ini')
+  config_file = os.path.join(os.path.dirname(__file__), 'config.ini')
+  config = newweb.read_config(config_file)
   routes = [
       ('/static/(.*)', 'Static'),
       ('/(broken.*)', 'FourOhFour'),
@@ -35,4 +36,4 @@ def main():
       ('/ULF-Login', '_ULF_Verify'),
       ('/([\w\-_/]*)', 'Index'),
       ('/(.*)', 'NonWordCatchall')]
-  return uweb.NewWeb(pages.PageMaker, routes, config=uweb.read_config(config))
+  return newweb.NewWeb(pages.PageMaker, routes, config=config)

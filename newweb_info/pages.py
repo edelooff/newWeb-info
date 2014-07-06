@@ -9,11 +9,11 @@ import os
 import time
 
 # uWeb modules
-import uweb
-from uweb.pagemaker import login
+import newweb
+from newweb.pagemaker import login
 
 
-class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
+class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
   """Holds all the html generators for the webapp
 
   Each page as a separate method.
@@ -24,7 +24,7 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
             'footer': self.parser.Parse(
                 'footer.html',
                 year=time.strftime('%Y'),
-                version=uweb.__version__)}
+                version=newweb.__version__)}
 
   def CustomCookie(self):
     """Sets a cookie, and redirects the user to the index page.
@@ -62,13 +62,14 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
   def Json(self):
     """Returns a JSON response with the form data, or just the project name."""
     if self.post:
-      form = dict((key, self.post.getfirst(key)) for key in self.post)
-      return uweb.Response(json.dumps(form, sort_keys=True, indent=4),
-                           content_type='application/json')
-    return uweb.Response(json.dumps({'name': u'\N{micro sign}Web'}),
-                         content_type='application/json',
-                         headers={'Access-Control-Allow-Origin': '*',
-                                  'Cache-Control': 'no-cache, must-revalidate'})
+      data = dict((key, self.post.getfirst(key)) for key in self.post)
+    else:
+      data = {'name': u'\N{micro sign}Web'}
+    self.req.response.headers.update({
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache, must-revalidate'})
+    self.req.response.content_type = 'application/json'
+    return json.dumps(data, sort_keys=True, indent=4)
 
   @staticmethod
   def MakeFail():
@@ -104,20 +105,19 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
         message=text,
         **self.CommonBlocks('uweb'))
 
-  @staticmethod
-  def Text():
+  def Text(self):
     """Returns a page with data in text/plain.
 
     To return a different content type, the returned object must be a Page,
     where the `content_type` argument can be set to any desired mimetype.
     """
-    text = """
+    self.req.response.content_type = 'text/plain'
+    return """
         <h1>This is a text-only page.</h1>
 
         Linebreaks and leading whitespace are honored.
         <strong>HTML tags do nothing, as demonstrated above<strong>.
         """
-    return uweb.Response(text, content_type='text/plain')
 
   @staticmethod
   def Redirect(location):
@@ -151,13 +151,13 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
       @ location: str
         The full URL the client should be redirected to, including schema.
     """
-    return uweb.Redirect(location)
+    return newweb.Redirect(location)
 
   def FourOhFour(self, path):
     """The request could not be fulfilled, this returns a 404."""
-    content = self.parser.Parse(
+    self.req.response.httpcode = 404
+    return self.parser.Parse(
         '404.html', path=path, **self.CommonBlocks('http404'))
-    return uweb.Response(content, httpcode=404)
 
   def InternalServerError(self, *exc_info):
     """Returns a HTTP 500 page, since the request failed elsewhere."""
@@ -172,9 +172,9 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, uweb.DebuggingPageMaker):
       path = self.req.path
       logging.warning(
           'Execution of %r triggered an exception', path, exc_info=exc_info)
-      content = self.parser.Parse(
+      self.req.response.httpcode = 500
+      return self.parser.Parse(
           '500.html', path=path, **self.CommonBlocks('http500'))
-      return uweb.Response(content, httpcode=500)
 
   # ############################################################################
   # OpenID result handlers.
