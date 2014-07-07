@@ -25,8 +25,8 @@ class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
     return {'header': self.parser.Parse('header.html', page_id=page_id),
             'footer': self.parser.Parse(
                 'footer.html',
-                year=time.strftime('%Y'),
-                version=newweb.__version__)}
+                version={'newWeb-info': __version__,
+                         'newWeb': newweb.__version__})}
 
   def CustomCookie(self):
     """Sets a cookie, and redirects the user to the index page.
