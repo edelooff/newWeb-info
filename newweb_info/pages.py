@@ -12,6 +12,8 @@ import time
 import newweb
 from newweb.pagemaker import login
 
+__version__ = '0.1.0'
+
 
 class PageMaker(login.LoginMixin, login.OpenIdMixin, newweb.DebuggingPageMaker):
   """Holds all the html generators for the webapp

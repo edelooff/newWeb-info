@@ -1,0 +1,2 @@
+include README.md
+recursive-include logviewer *.ini *.html *.css *.ico
